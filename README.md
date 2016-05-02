@@ -5,3 +5,8 @@ Soundex is a simple algorithm to convert a string into a coded representation th
 
 The Soundex algorithm was invented in 1918 and was used by the US Census. More information on Wikipedia https://en.wikipedia.org/wiki/Soundex
 
+Usage
+
+let c = Soundex()
+
+c.soundex("Christopher") // C631
