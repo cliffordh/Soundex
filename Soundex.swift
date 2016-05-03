@@ -55,4 +55,33 @@ class Soundex {
         }
         return "0" // not specified in original Soundex specification, if character is not found, code is 0
     }
+    
+    func soundex(src: String) -> String {
+        
+        guard (src.characters.count>0) else {
+            return ""
+        }
+        
+        let str=src.uppercaseString
+        
+        var out: Array<Character> = Array("    ".characters)
+        var last: Character = " "
+        var mapped: Character = " "
+        var incount=1
+        var count = 1
+
+        out[0]=str[str.startIndex]
+        last = getMappingCode(str, index: 0)
+        while (incount < str.characters.count && count < out.count) {
+            mapped = getMappingCode(str, index: incount)
+            incount += 1
+            if (mapped != "0") {
+                if (mapped != "0" && mapped != last) {
+                    out[count]=mapped
+                    count += 1
+                }
+            }
+        }
+        return String(out)
+    }
 }
