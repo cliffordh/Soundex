@@ -16,28 +16,28 @@ class Soundex {
     
     static func buildMapping(codes: Array<Character>, alphabet: Array<Character>) -> [Character:Character] {
         var retval: [Character:Character] = [:]
-        for (index,code) in codes.enumerate() {
+        for (index,code) in codes.enumerated() {
             retval[code] = alphabet[index]
         }
         return retval
     }
     
-    var soundexMapping: Array<Character> = Array(count:4,repeatedValue:" ")
+    var soundexMapping: Array<Character> = Array(repeating:" ",count:4)
     
     func getMappingCode(s: String, index:Int) -> Character {
-        let i = s.startIndex.advancedBy(index) // get index in string, Unicode safe
+        let i = s.startIndex.advanced(by:index) // get index in string, Unicode safe
         
         let mappedChar = mapChar(s[i])
         
         if (index>1 && !(mappedChar=="0"))
         {
-            let j = s.startIndex.advancedBy(index-1)
+            let j = s.startIndex.advanced(by:index-1)
             
             let hwChar = s[j]
             
             if (hwChar=="H" || hwChar=="W")
             {
-                let k = s.startIndex.advancedBy(index-2)
+                let k = s.startIndex.advanced(by:index-2)
                 let prehwChar = s[k]
                 let firstCode = mapChar(prehwChar)
                 if (firstCode==mappedChar || "H"==prehwChar || "W"==prehwChar) {
@@ -62,7 +62,7 @@ class Soundex {
             return ""
         }
         
-        let str=src.uppercaseString
+        let str=src.uppercased()
         
         var out: Array<Character> = Array("    ".characters)
         var last: Character = " "
