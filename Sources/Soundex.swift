@@ -25,23 +25,19 @@ class Soundex {
     var soundexMapping: Array<Character> = Array(repeating:" ",count:4)
     
     func getMappingCode(s: String, index:Int) -> Character {
-//        let i = s.characters.startIndex.advanced(by:index) // get index in string, Unicode safe
         let i = s.index(s.startIndex, offsetBy: index)
-
         
         let mappedChar = mapChar(c:s[i])
         
         if (index>1 && !(mappedChar=="0"))
         {
-            //let j = s.characters.startIndex.advanced(by:index-1)
-	let j = s.index(s.startIndex,offsetBy:index-1)
+            let j = s.index(s.startIndex,offsetBy:index-1)
             
             let hwChar = s[j]
             
             if (hwChar=="H" || hwChar=="W")
             {
-//                let k = s.characters.startIndex.advanced(by:index-2)
-		let k = s.index(s.startIndex,offsetBy:index-2)
+                let k = s.index(s.startIndex,offsetBy:index-2)
                 let prehwChar = s[k]
                 let firstCode = mapChar(c:prehwChar)
                 if (firstCode==mappedChar || "H"==prehwChar || "W"==prehwChar) {
