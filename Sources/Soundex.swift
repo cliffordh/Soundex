@@ -8,13 +8,13 @@
 //  https://commons.apache.org/proper/commons-codec/apidocs/src-html/org/apache/commons/codec/language/Soundex.html
 
 
-class Soundex {
+public class Soundex {
     
-    static let en_mapping_string = Array("01230120022455012623010202".characters)
-    static let en_alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ".characters)
-    let mapping: [Character:Character] = Soundex.buildMapping(codes:en_alphabet,alphabet:en_mapping_string)
+    private static let en_mapping_string = Array("01230120022455012623010202".characters)
+    private static let en_alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ".characters)
+    private let mapping: [Character:Character] = Soundex.buildMapping(codes:en_alphabet,alphabet:en_mapping_string)
     
-    static func buildMapping(codes: Array<Character>, alphabet: Array<Character>) -> [Character:Character] {
+    private static func buildMapping(codes: Array<Character>, alphabet: Array<Character>) -> [Character:Character] {
         var retval: [Character:Character] = [:]
         for (index,code) in codes.enumerated() {
             retval[code] = alphabet[index]
@@ -22,9 +22,9 @@ class Soundex {
         return retval
     }
     
-    var soundexMapping: Array<Character> = Array(repeating:" ",count:4)
+    private var soundexMapping: Array<Character> = Array(repeating:" ",count:4)
     
-    func getMappingCode(s: String, index:Int) -> Character {
+    private func getMappingCode(s: String, index:Int) -> Character {
         let i = s.index(s.startIndex, offsetBy: index)
         
         let mappedChar = mapChar(c:s[i])
@@ -49,14 +49,14 @@ class Soundex {
         return mappedChar
     }
     
-    func mapChar(c: Character) -> Character {
+    private func mapChar(c: Character) -> Character {
         if let val = mapping[c] {
             return val
         }
         return "0" // not specified in original Soundex specification, if character is not found, code is 0
     }
     
-    func soundex(of: String) -> String {
+    public func soundex(of: String) -> String {
         
         guard (of.characters.count>0) else {
             return ""
