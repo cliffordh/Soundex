@@ -11,36 +11,35 @@
 public class Soundex {
     
     private static let en_mapping_string = Array("01230120022455012623010202".characters)
-    private static let en_alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ".characters)
-    private let mapping: [Character:Character] = Soundex.buildMapping(codes:en_alphabet,alphabet:en_mapping_string)
+    private static let en_alphabet =       Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ".characters)
+    private let mapping: [Character:Character] = Soundex.buildMapping(en_alphabet,alphabet:en_mapping_string)
     
     private static func buildMapping(codes: Array<Character>, alphabet: Array<Character>) -> [Character:Character] {
         var retval: [Character:Character] = [:]
-        for (index,code) in codes.enumerated() {
+        for (index,code) in codes.enumerate() {
             retval[code] = alphabet[index]
         }
         return retval
     }
     
-    private var soundexMapping: Array<Character> = Array(repeating:" ",count:4)
+    private var soundexMapping: Array<Character> = Array(count: 4, repeatedValue: " ")
     
     private func getMappingCode(s: String, index:Int) -> Character {
-        let i = s.index(s.startIndex, offsetBy: index)
         
-        let mappedChar = mapChar(c:s[i])
+        let char = s[s.startIndex.advancedBy(index)]
+        let mappedChar = mapChar(char)
+        guard mappedChar != "0" else { return mappedChar }
         
-        if (index>1 && !(mappedChar=="0"))
+        if (index>0)
         {
-            let j = s.index(s.startIndex,offsetBy:index-1)
+            let prevChar = s[s.startIndex.advancedBy(index-1)]
+            if mapChar(prevChar) == mappedChar {
+                return "0"
+            }
             
-            let hwChar = s[j]
-            
-            if (hwChar=="H" || hwChar=="W")
-            {
-                let k = s.index(s.startIndex,offsetBy:index-2)
-                let prehwChar = s[k]
-                let firstCode = mapChar(c:prehwChar)
-                if (firstCode==mappedChar || "H"==prehwChar || "W"==prehwChar) {
+            if (index>1) {
+                let preprevChar = s[s.startIndex.advancedBy(index-2)]
+                if (mappedChar == mapChar(preprevChar)) && (prevChar=="H" || prevChar=="W") {
                     return "0"
                 }
             }
@@ -62,24 +61,20 @@ public class Soundex {
             return ""
         }
         
-        let str=of.uppercased()
+        let str=of.uppercaseString
         
-        var out: Array<Character> = Array("    ".characters)
-        var last: Character = " "
-        var mapped: Character = " "
+        var out: Array<Character> = Array("0000".characters)
+        var mapped: Character = "0"
         var incount=1
         var count = 1
 
         out[0]=str[str.startIndex]
-        last = getMappingCode(s:str, index: 0)
         while (incount < str.characters.count && count < out.count) {
-            mapped = getMappingCode(s:str, index: incount)
+            mapped = getMappingCode(str, index: incount)
             incount += 1
             if (mapped != "0") {
-                if (mapped != "0" && mapped != last) {
-                    out[count]=mapped
-                    count += 1
-                }
+                out[count]=mapped
+                count += 1
             }
         }
         return String(out)
