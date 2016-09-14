@@ -8,37 +8,37 @@
 //  https://commons.apache.org/proper/commons-codec/apidocs/src-html/org/apache/commons/codec/language/Soundex.html
 
 
-public class Soundex {
+open class Soundex {
     
     private static let en_mapping_string = Array("01230120022455012623010202".characters)
     private static let en_alphabet =       Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ".characters)
     private let mapping: [Character:Character] = Soundex.buildMapping(en_alphabet,alphabet:en_mapping_string)
     
-    private static func buildMapping(codes: Array<Character>, alphabet: Array<Character>) -> [Character:Character] {
+    private static func buildMapping(_ codes: Array<Character>, alphabet: Array<Character>) -> [Character:Character] {
         var retval: [Character:Character] = [:]
-        for (index,code) in codes.enumerate() {
+        for (index,code) in codes.enumerated() {
             retval[code] = alphabet[index]
         }
         return retval
     }
     
-    private var soundexMapping: Array<Character> = Array(count: 4, repeatedValue: " ")
+    private var soundexMapping: Array<Character> = Array(repeating: " ", count: 4)
     
-    private func getMappingCode(s: String, index:Int) -> Character {
+    private func getMappingCode(_ s: String, index:Int) -> Character {
         
-        let char = s[s.startIndex.advancedBy(index)]
+        let char = s[s.characters.index(s.startIndex, offsetBy: index)]
         let mappedChar = mapChar(char)
         guard mappedChar != "0" else { return mappedChar }
         
         if (index>0)
         {
-            let prevChar = s[s.startIndex.advancedBy(index-1)]
+            let prevChar = s[s.characters.index(s.startIndex, offsetBy: index-1)]
             if mapChar(prevChar) == mappedChar {
                 return "0"
             }
             
             if (index>1) {
-                let preprevChar = s[s.startIndex.advancedBy(index-2)]
+                let preprevChar = s[s.characters.index(s.startIndex, offsetBy: index-2)]
                 if (mappedChar == mapChar(preprevChar)) && (prevChar=="H" || prevChar=="W") {
                     return "0"
                 }
@@ -48,20 +48,20 @@ public class Soundex {
         return mappedChar
     }
     
-    private func mapChar(c: Character) -> Character {
+    private func mapChar(_ c: Character) -> Character {
         if let val = mapping[c] {
             return val
         }
         return "0" // not specified in original Soundex specification, if character is not found, code is 0
     }
     
-    public func soundex(of: String) -> String {
+    open func soundex(_ of: String) -> String {
         
         guard (of.characters.count>0) else {
             return ""
         }
         
-        let str=of.uppercaseString
+        let str=of.uppercased()
         
         var out: Array<Character> = Array("0000".characters)
         var mapped: Character = "0"
